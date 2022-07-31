@@ -64,6 +64,7 @@ import {
 import { User } from '@supabase/supabase-js';
 import { defineComponent, onMounted, ref } from 'vue';
 import Avatar from '../components/Avatar.vue';
+import { useRouter } from "vue-router";
 export default defineComponent({
   name: 'AccountPage',
   components: {
@@ -80,6 +81,7 @@ export default defineComponent({
   },
   setup() {
     const session = ref(supabase.auth.session());
+    const router = useRouter();
     const profile = ref({
       username: '',
       website: '',
@@ -91,7 +93,7 @@ export default defineComponent({
       const toast = await toastController.create({ duration: 5000 });
       await loader.present();
       try {
-        let { data, error, status } = await supabase
+        const { data, error, status } = await supabase
           .from('profiles')
           .select(`username, website, avatar_url`)
           .eq('id', user.id)
@@ -126,7 +128,7 @@ export default defineComponent({
           updated_at: new Date(),
         };
         //
-        let { error } = await supabase.from('profiles').upsert(updates, {
+        const { error } = await supabase.from('profiles').upsert(updates, {
           returning: 'minimal', // Don't return the value after inserting
         });
         //
@@ -144,8 +146,9 @@ export default defineComponent({
       const toast = await toastController.create({ duration: 5000 });
       await loader.present();
       try {
-        let { error } = await supabase.auth.signOut();
+        const { error } = await supabase.auth.signOut();
         if (error) throw error;
+        else router.push('/login'); 
       } catch (error: any) {
         toast.message = error.message;
         await toast.present();

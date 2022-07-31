@@ -51,7 +51,7 @@ export default defineComponent({
           const fileName = `${Math.random()}-${new Date().getTime()}.${
             photo.format
           }`;
-          let { error: uploadError } = await supabase.storage
+          const { error: uploadError } = await supabase.storage
             .from('avatars')
             .upload(fileName, file);
           if (uploadError) {

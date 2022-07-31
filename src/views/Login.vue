@@ -9,25 +9,27 @@
     <ion-content>
       <div class="ion-padding">
         <h1>Supabase + Ionic Vue</h1>
-        <p>Sign in via magic link with your email below</p>
+        <p>Signin</p>
       </div>
       <ion-list inset="true">
         <form @submit.prevent="handleLogin">
           <ion-item>
             <ion-label position="stacked">Email</ion-label>
-            <ion-input
-              v-model="email"
-              name="email"
-              autocomplete
-              type="email"
-            ></ion-input>
+            <ion-input v-model="email" name="email" autocomplete type="email"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Password</ion-label>
+            <ion-input v-model="password" name="password" autocomplete type="password"></ion-input>
           </ion-item>
           <div class="ion-text-center">
             <ion-button type="submit" fill="clear">Login</ion-button>
           </div>
         </form>
+        <div class="ion-text-center">
+          <ion-button shape="round" color="primary" href="/register">Register</ion-button>
+        </div>
       </ion-list>
-      <p>{{email}}</p>
+      <p>{{ email }}</p>
     </ion-content>
 
   </ion-page>
@@ -67,6 +69,7 @@ export default defineComponent({
   },
   setup() {
     const email = ref('');
+    const password = ref('');
     const handleLogin = async () => {
 
       const loader = await loadingController.create({});
@@ -74,12 +77,10 @@ export default defineComponent({
 
       try {
         await loader.present();
-        const { error } = await supabase.auth.signIn({ email: email.value });
+        const { error } = await supabase.auth.signIn({ email: email.value, password: password.value });
 
         if (error) throw error;
 
-        toast.message = 'Check your email for the login link!';
-        await toast.present();
 
       } catch (error: any) {
 
@@ -92,7 +93,7 @@ export default defineComponent({
 
       }
     };
-    return { handleLogin, email };
+    return { handleLogin, email, password };
   },
 });
 </script>
