@@ -17,8 +17,9 @@
         </ion-item>
 
         <ion-item>
-          <ion-label position="stacked">Name</ion-label>
           <ion-input
+            labelPlacement="stacked"
+            label="Name"
             type="text"
             name="username"
             v-model="profile.username"
@@ -26,8 +27,9 @@
         </ion-item>
 
         <ion-item>
-          <ion-label position="stacked">Website</ion-label>
           <ion-input
+            labelPlacement="stacked"
+            label="Website"
             type="url"
             name="website"
             v-model="profile.website"
@@ -46,8 +48,8 @@
 </template>
 
 <script lang="ts">
-import { store } from '@/store';
-import { supabase } from '@/supabase';
+import { store } from "@/store";
+import { supabase } from "@/supabase";
 import {
   IonContent,
   IonHeader,
@@ -60,12 +62,12 @@ import {
   IonItem,
   IonButton,
   IonLabel,
-} from '@ionic/vue';
-import { User } from '@supabase/supabase-js';
-import { defineComponent, onMounted, ref } from 'vue';
-import Avatar from '../components/Avatar.vue';
+} from "@ionic/vue";
+import { User } from "@supabase/supabase-js";
+import { defineComponent, onMounted, ref } from "vue";
+import Avatar from "../components/Avatar.vue";
 export default defineComponent({
-  name: 'AccountPage',
+  name: "AccountPage",
   components: {
     Avatar,
     IonContent,
@@ -81,9 +83,9 @@ export default defineComponent({
   setup() {
     const session = ref(supabase.auth.session());
     const profile = ref({
-      username: '',
-      website: '',
-      avatar_url: '',
+      username: "",
+      website: "",
+      avatar_url: "",
     });
     const user = store.user as User;
     async function getProfile() {
@@ -92,15 +94,15 @@ export default defineComponent({
       await loader.present();
       try {
         let { data, error, status } = await supabase
-          .from('profiles')
+          .from("profiles")
           .select(`username, website, avatar_url`)
-          .eq('id', user.id)
+          .eq("id", user.id)
           .single();
 
         if (error && status !== 406) throw error;
 
         if (data) {
-          console.log(data)
+          console.log(data);
           profile.value = {
             username: data.username,
             website: data.website,
@@ -126,8 +128,8 @@ export default defineComponent({
           updated_at: new Date(),
         };
         //
-        let { error } = await supabase.from('profiles').upsert(updates, {
-          returning: 'minimal', // Don't return the value after inserting
+        let { error } = await supabase.from("profiles").upsert(updates, {
+          returning: "minimal", // Don't return the value after inserting
         });
         //
         if (error) throw error;
